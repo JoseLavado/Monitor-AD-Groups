@@ -22,24 +22,15 @@ foreach ($group in $groups) {
     }
    $groupMembers | Export-Csv -Path "C:\temp\monitorAD\$group.csv" -NoTypeInformation
 }
-<#
-write-Output ""
-write-Output "The following Users were Added:"
-Write-Output $added
-write-Output ""
-write-Output "The following Useres were Removed:"
-Write-Output $removed
-#>
-$body = "The following Users were Added:`n$added`nThe following Useres were Removed:`n$removed"
 
+$body = "The following Users were Added:`n$added`nThe following Useres were Removed:`n$removed"
 Write-Output $body
-<#
-Send-MailMessage -To 'jlavado@recipeunlimited.com' -Subject 'AD Group membership change alert' -Body $body -SmtpServer '1.1.1.1' -From 'no-reply@recipeunlimited.com' -Port 25
-#>
-Write-Host "Welcome to demo of powershell prompt input" -ForegroundColor Green
-$name= Read-Host -Prompt "Enter your name"
-$age= Read-Host -Prompt "Enter your age"
-$city= Read-Host -Prompt "Enter your city"
-Write-Host "The entered name is" $name -ForegroundColor Green
-Write-Host "The entered age is" $age -ForegroundColor Green
-Write-Host "The entered city is" $city -ForegroundColor Green
+
+$smtp_ip= Read-Host -Prompt "Enter SMTP IP"
+Write-Host "The IP was: " $smtp_ip
+$to_email='jlavado@recipeunlimited.com'
+$subject='AD Group membership change alert'
+$from_email='no-reply@recipeunlimited.com'
+#$to_email='aaaadqh5i5tbgm7xg2kkmuukau@recipe-unlimited.slack.com'
+Send-MailMessage -To $to_email -Subject $subject -Body $body -SmtpServer $smtp_ip -From $from_email -Port 25
+
