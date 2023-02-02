@@ -14,21 +14,25 @@ Write-Output "******************************************************************
 Write-Output "Current Group memebers in $group"
 Write-Output $groupMembers
 
-$added = foreach ($user in $groupMembers) {
-        if ($previousRunMemberships.SID -notcontains $user.SID) {
-            $user
+$added = foreach ($user1 in $groupMembers) {
+        if ($previousRunMemberships.SID -notcontains $user1.SID) {
+            $user1
         }
     }
 
-$removed = foreach ($user in $previousRunMemberships) {
-        if ($groupMembers.SID -notcontains $user.SID) {
-            $user
+$removed = foreach ($user2 in $previousRunMemberships) {
+        if ($groupMembers.SID -notcontains $user2.SID) {
+            $user2
         }
     }
 
 $groupMembers | Export-Csv -Path "C:\temp\monitorAD\$group.csv" -NoTypeInformation
+$added | Export-Csv -Path "C:\temp\monitorAD\added.csv" -NoTypeInformation
+$removed | Export-Csv -Path "C:\temp\monitorAD\removed.csv" -NoTypeInformation
+$final_add = Import-Csv -Path "C:\temp\monitorAD\added.csv"
+$final_removed = Import-Csv -Path "C:\temp\monitorAD\removed.csv"
+$body = "Group Administrators`n"+"Added:"+$final_add + "`nRemoved:"+$final_removed
 
-$body = "The following Users were Added:`n$added`nThe following Users were Removed:`n$removed`nin Group: $group"
 Write-Output ""
 Write-Output "Changes:"
 Write-Output "added:"
