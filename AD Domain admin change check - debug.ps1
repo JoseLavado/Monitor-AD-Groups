@@ -1,4 +1,4 @@
-$group = 'Administrators'
+$group = 'Domain Admins'
 Write-Output "***************************************************************"
 Write-Output "Script starts Here" 
 Write-Output "Group being monitored is: $group"
@@ -9,7 +9,7 @@ if (Test-Path "C:\temp\monitorAD\$group.csv") {
     Write-Output "previuos members in $group"
     Write-Output $previousRunMemberships}
 
-$groupMembers = Get-LocalGroupMember $group
+$groupMembers = Get-ADGroupMember $group
 Write-Output "*******************************************************************"
 Write-Output "Current Group memebers in $group"
 Write-Output $groupMembers
@@ -27,13 +27,13 @@ $removed = foreach ($user2 in $previousRunMemberships) {
     }
 
 $groupMembers | Export-Csv -Path "C:\temp\monitorAD\$group.csv" -NoTypeInformation
-$added | Export-Csv -Path "C:\temp\monitorAD\added.csv" -NoTypeInformation
-$removed | Export-Csv -Path "C:\temp\monitorAD\removed.csv" -NoTypeInformation
-$final_add = Import-Csv -Path "C:\temp\monitorAD\added.csv"
-$final_removed = Import-Csv -Path "C:\temp\monitorAD\removed.csv"
-$add_part = $final_add | Out-String
-$removed_part = $final_removed | Out-String 
-$body = "Group Administrators`n"+"Added:"+$add_part + "`nRemoved:"+$removed_part
+$added | Export-Csv -Path "C:\temp\monitorAD\$group+added.csv" -NoTypeInformation
+$removed | Export-Csv -Path "C:\temp\monitorAD\$group+removed.csv" -NoTypeInformation
+$final_add = Import-Csv -Path "C:\temp\monitorAD\$group+added.csv"
+$final_removed = Import-Csv -Path "C:\temp\monitorAD\$group+removed.csv"
+$add_part = $final_add | select SamAccountName, objectClass, distinguishedName | Format-Table | Out-String
+$removed_part = $final_removed | select SamAccountName, objectClass, distinguishedName | Format-Table | Out-String
+$body = "Domain Administrators`n"+"Added:"+$add_part + "`nRemoved:"+$removed_part
 
 Write-Output ""
 Write-Output "Changes:"
@@ -44,13 +44,16 @@ Write-Output $removed
 Write-Output "Body"
 Write-Output $body
 
-<#
-$smtp_ip= Read-Host -Prompt "Enter SMTP IP"
-Write-Host "The IP was: " $smtp_ip
-$to_email='jlavado@recipeunlimited.com'
+
+#$smtp_ip= Read-Host -Prompt "Enter SMTP IP"
+#Write-Host "The IP was: " $smtp_ip
+$smtp_ip= '172.31.1.100'
 $subject='Domain Admins group change alert'
 $from_email='no-reply@recipeunlimited.com'
-#$to_email='aaaadqh5i5tbgm7xg2kkmuukau@recipe-unlimited.slack.com'
-Send-MailMessage -To $to_email -Subject $subject -Body $body -SmtpServer $smtp_ip -From $from_email -Port 25
+$to_email1='jlavado@recipeunlimited.com'
+$to_email2='aaaadqh5i5tbgm7xg2kkmuukau@recipe-unlimited.slack.com'
+if ($added -or $removed) {
+Send-MailMessage -To $to_email1 -Subject $subject -Body $body -SmtpServer $smtp_ip -From 'netopswan@cara.com' -Port 25
+Send-MailMessage -To $to_email2 -Subject $subject -Body $body -SmtpServer $smtp_ip -From $from_email -Port 25
+}
 
-#>
