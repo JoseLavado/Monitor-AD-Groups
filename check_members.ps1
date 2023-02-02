@@ -31,7 +31,9 @@ $added | Export-Csv -Path "C:\temp\monitorAD\added.csv" -NoTypeInformation
 $removed | Export-Csv -Path "C:\temp\monitorAD\removed.csv" -NoTypeInformation
 $final_add = Import-Csv -Path "C:\temp\monitorAD\added.csv"
 $final_removed = Import-Csv -Path "C:\temp\monitorAD\removed.csv"
-$body = "Group Administrators`n"+"Added:"+$final_add + "`nRemoved:"+$final_removed
+$add_part = $final_add | Out-String
+$removed_part = $final_removed | Out-String 
+$body = "Group Administrators`n"+"Added:"+$add_part + "`nRemoved:"+$removed_part
 
 Write-Output ""
 Write-Output "Changes:"
