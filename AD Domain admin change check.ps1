@@ -1,7 +1,7 @@
 <#
 Script to monitor AD domain group membership changes
 Name: Jose Lavado <jlavado@recipeunlimited.com>
-Date: Jan 31, 2023
+Date: Jan 30, 2023
 #>
 
 #Enter the settings to run the script
@@ -10,7 +10,7 @@ $smtp_ip= '172.31.1.100' #email server
 $subject='Domain Admins group change alert' #email parameters
 $from_email='netopswan@cara.com'
 $to_email1='jlavado@recipeunlimited.com' 
-$to_email2='aaaadqh5i5tbgm7xg2kkmuukau@recipe-unlimited.slack.com' #Slack channel email
+$to_email2='it_operations-aaaabela63dxljjbosr2hjmxru@recipe-unlimited.slack.com' #Slack channel email
 
 #If file exists them import it to var $previousRunMemberships
 if (Test-Path "C:\temp\monitorAD\$group.csv") {
