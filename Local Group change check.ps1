@@ -47,11 +47,11 @@ Write-Output $body
 
 #$smtp_ip= Read-Host -Prompt "Enter SMTP IP"
 #Write-Host "The IP was: " $smtp_ip
-$smtp_ip= '172.31.1.100'
+$smtp_ip= '1.1.1.1'
 $subject='Domain Admins group change alert'
-$from_email='no-reply@recipeunlimited.com'
-$to_email1='jlavado@recipeunlimited.com'
-$to_email2='aaaadqh5i5tbgm7xg2kkmuukau@recipe-unlimited.slack.com'
+$from_email='no-reply@company_email.com'
+$to_email1='jlavado@company_email.com'
+$to_email2='slack_channel@company_email.slack.com'
 if ($added -or $removed) {
 Send-MailMessage -To $to_email1 -Subject $subject -Body $body -SmtpServer $smtp_ip -From $from_email -Port 25
 Send-MailMessage -To $to_email2 -Subject $subject -Body $body -SmtpServer $smtp_ip -From $from_email -Port 25
