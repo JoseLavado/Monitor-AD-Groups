@@ -8,9 +8,9 @@ Date: Jan 30, 2023
 $group = 'Domain Admins' #domain group to monitor
 $smtp_ip= '1.1.1.1' #email server
 $subject='Domain Admins group change alert' #email parameters
-$from_email='no-reply@cara.com'
-$to_email1='jlavado@recipeunlimited.com' 
-$to_email2='it_team-xxxx@recipe-unlimited.slack.com' #Slack channel email
+$from_email='no-reply@company_email.com'
+$to_email1='jlavado@company_email.com' 
+$to_email2='it_team-xxxx@company_email.slack.com' #Slack channel email
 
 #If file exists them import it to var $previousRunMemberships
 if (Test-Path "C:\temp\monitorAD\$group.csv") {
